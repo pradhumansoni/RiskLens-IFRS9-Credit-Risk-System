@@ -7,6 +7,10 @@ Risk_Model_Data_Nuances.md
 
 IFRS9_Project_Bible_v3.docx
 
+#models
+
+models/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
