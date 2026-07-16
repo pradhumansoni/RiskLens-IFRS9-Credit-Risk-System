@@ -86,3 +86,43 @@ def map_risk_grade(encoded_prediction):
     }
 
     return mapping[encoded_prediction]
+
+
+# ============================================================
+# Run Credit Assessment
+# ============================================================
+
+from IFRS9_engine import (
+    generate_risk_report,
+    format_risk_report
+)
+
+
+def run_credit_assessment(
+    applicant_id: str,
+    risk_grade: str,
+    loan_data: dict
+) -> dict:
+    """
+    Run the complete IFRS 9 credit assessment pipeline.
+
+    Parameters
+    ----------
+    applicant_id : str
+    risk_grade : str
+    loan_data : dict
+
+    Returns
+    -------
+    dict
+        Formatted IFRS 9 report.
+    """
+
+    report = generate_risk_report(
+        applicant_id=applicant_id,
+        risk_grade=risk_grade,
+        loan_amount=loan_data["loan_amount"],
+        collateral_value=loan_data["collateral"]
+    )
+
+    return format_risk_report(report)
