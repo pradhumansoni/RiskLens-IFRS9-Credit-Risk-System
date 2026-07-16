@@ -1,1 +1,0 @@
-# IFRS-9-Credit-Risk-Rating-ECL-System
