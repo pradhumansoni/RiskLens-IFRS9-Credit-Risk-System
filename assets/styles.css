@@ -226,3 +226,43 @@ footer{
 
     background:#111827;
 }
+
+/* ==========================================================
+   SECTION CONTAINER
+========================================================== */
+
+.section-box{
+
+    background:#1E2633;
+
+    border-radius:12px;
+
+    padding:22px;
+
+    margin-top:20px;
+
+    margin-bottom:20px;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+}
+
+.section-title{
+
+    font-size:26px;
+
+    font-weight:700;
+
+    color:white;
+
+    margin-bottom:18px;
+
+}
+
+.section-divider{
+
+    border-top:1px solid rgba(255,255,255,0.08);
+
+    margin-bottom:18px;
+
+}

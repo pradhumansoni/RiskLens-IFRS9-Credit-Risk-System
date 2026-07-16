@@ -23,6 +23,16 @@ TEXT = "#1F2937"
 # MODEL PATHS
 # ==========================================================
 
+
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+ASSETS_DIR = PROJECT_ROOT / "assets"
+
+
+MODEL_DIR = ASSETS_DIR / "model"
+
 MODEL_PATH = "models/final_lgbm_model.pkl"
 
 DATA_PATH = "data/processed/encoded_dataset.csv"
@@ -147,3 +157,100 @@ RISK_LEVEL_MAPPING = {
     "P3": "Moderate Risk",
     "P4": "High Risk"
 }
+
+# ==========================================================
+# CREDIT DECISION SCORECARD
+# ==========================================================
+
+# -----------------------------
+# Borrower Risk (40)
+# -----------------------------
+
+RISK_GRADE_SCORE = {
+    "P1": 20,
+    "P2": 16,
+    "P3": 10,
+    "P4": 4
+}
+
+IFRS_STAGE_SCORE = {
+    "Stage 1": 10,
+    "Stage 2": 6,
+    "Stage 3": 2
+}
+
+PD_SCORE = [
+    (0.03, 10),
+    (0.08, 8),
+    (0.15, 6),
+    (0.25, 3),
+    (1.00, 1)
+]
+
+
+# -----------------------------
+# Loan Structure (30)
+# -----------------------------
+
+COLLATERAL_SCORE = [
+    (0.50, 2),
+    (0.80, 6),
+    (1.00, 10),
+    (1.50, 13),
+    (float("inf"), 15)
+]
+
+LGD_SCORE = [
+    (0.20, 10),
+    (0.40, 8),
+    (0.60, 5),
+    (1.00, 2)
+]
+
+LOAN_AMOUNT_SCORE = [
+    (200000, 5),
+    (500000, 4),
+    (1000000, 3),
+    (2000000, 2),
+    (float("inf"), 1)
+]
+
+
+# -----------------------------
+# Expected Loss (30)
+# -----------------------------
+
+ECL_SCORE = [
+    (5000, 20),
+    (25000, 16),
+    (50000, 12),
+    (100000, 8),
+    (float("inf"), 4)
+]
+
+LOSS_RATIO_SCORE = [
+    (0.01, 10),
+    (0.03, 8),
+    (0.05, 6),
+    (0.10, 3),
+    (1.00, 1)
+]
+
+
+# ==========================================================
+# FINAL DECISION
+# ==========================================================
+
+DECISION_THRESHOLDS = [
+
+    (85, "Approve"),
+
+    (70, "Approve with Monitoring"),
+
+    (55, "Additional Collateral Required"),
+
+    (40, "Manual Credit Committee Review"),
+
+    (0, "Decline Application")
+
+]

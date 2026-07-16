@@ -548,4 +548,278 @@ def create_risk_summary_card(risk_grade):
             "Success"
         )
 
+# ==========================================================
+# IFRS 9 ASSESSMENT SUMMARY
+# ==========================================================
 
+def create_ifrs9_summary(report: dict):
+    """
+    Display the IFRS 9 assessment using native Streamlit components.
+    """
+
+    st.divider()
+    st.header("📉 IFRS 9 Risk Assessment")
+
+    # ==========================================================
+    # BORROWER RISK
+    # ==========================================================
+
+    with st.container(border=True):
+
+        st.subheader("👤 Borrower Risk")
+
+        c1, c2, c3 = st.columns(3)
+
+        with c1:
+            st.metric("Risk Grade", report["Risk Grade"])
+
+        with c2:
+            st.metric("Risk Level", report["Risk Level"])
+
+        with c3:
+            st.metric("IFRS Stage", report["IFRS Stage"])
+
+    # ==========================================================
+    # LOAN DETAILS
+    # ==========================================================
+
+    with st.container(border=True):
+
+        st.subheader("💰 Loan Details")
+
+        c1, c2, c3 = st.columns(3)
+
+        with c1:
+            st.metric("Loan Amount", report["Loan Amount"])
+
+        with c2:
+            st.metric("Collateral Value", report["Collateral Value"])
+
+        with c3:
+            st.metric("Coverage", report["Collateral Coverage"])
+
+    # ==========================================================
+    # IFRS 9 METRICS
+    # ==========================================================
+
+    with st.container(border=True):
+
+        st.subheader("📊 IFRS 9 Metrics")
+
+        c1, c2, c3, c4 = st.columns(4)
+
+        with c1:
+            st.metric("PD", report["PD"])
+
+        with c2:
+            st.metric("LGD", report["LGD"])
+
+        with c3:
+            st.metric("EAD", report["EAD"])
+
+        with c4:
+            st.metric("Loss Ratio", report["Loss Ratio"])
+
+    # ==========================================================
+    # EXPECTED CREDIT LOSS
+    # ==========================================================
+
+    with st.container(border=True):
+
+        st.subheader("💸 Expected Credit Loss")
+
+        st.metric(
+            label="Expected Credit Loss (ECL)",
+            value=report["ECL"]
+        )
+
+    # ==========================================================
+    # DECISION
+    # ==========================================================
+
+    st.divider()
+    st.header("🏦 Lending Decision")
+
+    decision = report["Decision"]
+
+    if "Reject" in decision or "Decline" in decision:
+
+        st.error(f"❌ {decision}")
+
+    elif "Manual" in decision:
+
+        st.warning(f"🟡 {decision}")
+
+    elif "Monitor" in decision:
+
+        st.info(f"🔵 {decision}")
+
+    else:
+
+        st.success(f"✅ {decision}")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        with st.container(border=True):
+
+            st.subheader("📅 Monitoring")
+
+            st.write(report["Monitoring"])
+
+    with col2:
+
+        with st.container(border=True):
+
+            st.subheader("📝 Reason")
+
+            st.write(report["Reason"])
+
+
+    # ==========================================================
+    # CREDIT DECISION SCORE
+    # ==========================================================
+
+    with st.container(border=True):
+
+        st.subheader("📊 Credit Decision Score")
+
+        st.metric(
+            "Overall Score",
+            f"{report['Decision Score']} / 100"
+        )
+
+        st.progress(report["Decision Score"] / 100)
+        if report["Decision Score"] >= 85:
+
+            st.success("Excellent Credit Profile")
+
+        elif report["Decision Score"] >= 70:
+
+            st.info("Good Credit Profile")
+
+        elif report["Decision Score"] >= 55:
+
+            st.warning("Moderate Credit Profile")
+
+        else:
+
+            st.error("High Credit Risk")
+
+        st.divider()
+
+        # ======================================================
+        # SECTION SCORES
+        # ======================================================
+
+        c1, c2, c3 = st.columns(3)
+
+        with c1:
+            st.metric(
+                "Borrower Risk",
+                f"{report['Borrower Risk Score']} / 40"
+            )
+
+        with c2:
+            st.metric(
+                "Loan Structure",
+                f"{report['Loan Structure Score']} / 30"
+            )
+
+        with c3:
+            st.metric(
+                "Expected Loss",
+                f"{report['Expected Loss Score']} / 30"
+            )
+
+        # ======================================================
+        # BORROWER RISK
+        # ======================================================
+
+        with st.expander("👤 Borrower Risk Breakdown"):
+
+            st.write(
+                f"• Risk Grade : **{report['Risk Grade Score']} / 20**"
+            )
+
+            st.write(
+                f"• IFRS Stage : **{report['Stage Score']} / 10**"
+            )
+
+            st.write(
+                f"• PD : **{report['PD Score']} / 10**"
+            )
+
+        # ======================================================
+        # LOAN STRUCTURE
+        # ======================================================
+
+        with st.expander("💰 Loan Structure Breakdown"):
+
+            st.write(
+                f"• Collateral : **{report['Collateral Score']} / 15**"
+            )
+
+            st.write(
+                f"• LGD : **{report['LGD Score']} / 10**"
+            )
+
+            st.write(
+                f"• Loan Amount : **{report['Loan Amount Score']} / 5**"
+            )
+
+        # ======================================================
+        # EXPECTED LOSS
+        # ======================================================
+
+        with st.expander("📉 Expected Loss Breakdown"):
+
+            st.write(
+                f"• ECL : **{report['ECL Score']} / 20**"
+            )
+
+            st.write(
+                f"• Loss Ratio : **{report['Loss Ratio Score']} / 10**"
+            )
+
+# =====================================================
+# Section Header Function
+# =====================================================
+
+def section_header(title):
+
+    st.markdown(
+
+        f"""
+
+<div class="section-box">
+
+<div class="section-title">
+
+{title}
+
+</div>
+
+<div class="section-divider"></div>
+
+""",
+
+        unsafe_allow_html=True
+
+    )
+
+
+# =====================================================
+# End Section
+# =====================================================
+
+def end_section():
+
+    st.markdown(
+
+        "</div>",
+
+        unsafe_allow_html=True
+
+    )

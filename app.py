@@ -12,10 +12,11 @@ st.set_page_config(
 dashboard = st.Page("pages/Dashboard.py", title="🏠 Dashboard")
 loan = st.Page("pages/Loan_Assessment.py", title="📝 Loan Assessment")
 portfolio = st.Page("pages/Portfolio_Analytics.py", title="📈 Portfolio Analytics")
+model = st.Page("pages/Model_Performance.py", title="Ⓜ️ Model Performance")
 about = st.Page("pages/About.py", title="ℹ️ About")
 
 st.sidebar.title("🏦 AI Credit Risk System")
 st.sidebar.markdown("---")
 
-pg = st.navigation([dashboard, loan, portfolio, about])
+pg = st.navigation([dashboard, loan, model ,portfolio, about])
 pg.run()

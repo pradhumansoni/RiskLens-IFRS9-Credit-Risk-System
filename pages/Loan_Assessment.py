@@ -16,7 +16,8 @@ from src.components import (
     create_customer_profile,
     create_loan_form,
     create_generate_button,
-    create_risk_summary_card
+    create_risk_summary_card,
+    create_ifrs9_summary
 )
 
 from src.prediction import (
@@ -148,6 +149,8 @@ if (
 
 if st.session_state.current_report is not None:
 
-    st.write(st.session_state.current_report)
+    create_ifrs9_summary(
+    st.session_state.current_report
+)
 
 

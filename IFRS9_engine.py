@@ -26,6 +26,18 @@ from src.config import (
     RISK_LEVEL_MAPPING
 )
 
+from src.config import (
+    RISK_GRADE_SCORE,
+    IFRS_STAGE_SCORE,
+    PD_SCORE,
+    COLLATERAL_SCORE,
+    LGD_SCORE,
+    LOAN_AMOUNT_SCORE,
+    ECL_SCORE,
+    LOSS_RATIO_SCORE,
+    DECISION_THRESHOLDS
+)
+
 # ==========================================================
 # CONFIGURATION
 # ==========================================================
@@ -97,7 +109,7 @@ DECISION_RULES = [
         "stage": "Stage 3",
         "max_loss_ratio": 1.00,
         "decision": "Decline Application",
-        "monitoring": "Not Applicable",
+        "monitoring": "Not Applicable(Should Decline the Application)",
         "reason": "Credit risk exceeds the bank's acceptable lending policy."
     }
 ]
@@ -108,6 +120,45 @@ RISK_LEVEL_MAPPING = {
     "P3": "Moderate Risk",
     "P4": "High Risk"
 }
+
+# We are implementing the score system based on these IFRS9 Results + Model Risk Class + Stage
+
+# ==========================================================
+# GENERIC SCORE LOOKUP
+# ==========================================================
+
+def lookup_score(value, rules):
+
+    for threshold, score in rules:
+
+        if value <= threshold:
+            return score
+
+    return 0
+
+# ==========================================================
+# GENERIC REVERSE LOOKUP
+# ==========================================================
+
+# ==========================================================
+# HIGHER IS BETTER SCORE LOOKUP
+# ==========================================================
+
+def lookup_high_score(value, rules):
+    """
+    Lookup helper for metrics where higher values
+    receive higher scores.
+
+    Example:
+        Collateral Coverage
+    """
+
+    for threshold, score in reversed(rules):
+
+        if value >= threshold:
+            return score
+
+    return 0
 
 # ==========================================================
 # PD ENGINE
@@ -265,62 +316,227 @@ def classify_stage(risk_grade: str) -> str:
 
     return STAGE_MAPPING[risk_grade]
 
+
 # ==========================================================
-# LENDING DECISION ENGINE
+# CREDIT DECISION SCORE
 # ==========================================================
 
-# building the decision Engine
-def generate_decision(
-    stage: str,
-    ecl: float,
-    ead: float
+def compute_credit_decision_score(
+    risk_grade,
+    stage,
+    pd,
+    loan_amount,
+    collateral_coverage,
+    lgd,
+    ecl,
+    loss_ratio
 ):
     """
-    Generate lending recommendation based on
-    IFRS 9 Stage and Expected Loss Ratio.
-
-    Parameters
-    ----------
-    stage : str
-        IFRS 9 Stage.
-
-    ecl : float
-        Expected Credit Loss.
-
-    ead : float
-        Exposure at Default.
+    Computes the final Credit Decision Score (0-100).
 
     Returns
     -------
     dict
-        Lending recommendation.
+        {
+            "Risk Grade Score": ...,
+            "Stage Score": ...,
+            "PD Score": ...,
+            "Borrower Risk Score": ...,
+
+            "Collateral Score": ...,
+            "LGD Score": ...,
+            "Loan Amount Score": ...,
+            "Loan Structure Score": ...,
+
+            "ECL Score": ...,
+            "Loss Ratio Score": ...,
+            "Expected Loss Score": ...,
+
+            "Final Score": ...
+        }
     """
 
-    if ead <= 0:
-        raise ValueError("EAD must be greater than zero.")
+    # ======================================================
+    # BORROWER RISK (40)
+    # ======================================================
 
-    loss_ratio = ecl / ead
+    risk_grade_score = RISK_GRADE_SCORE[risk_grade]
 
-    for rule in DECISION_RULES:
+    stage_score = IFRS_STAGE_SCORE[stage]
 
-        if (
-            stage == rule["stage"]
-            and loss_ratio <= rule["max_loss_ratio"]
-        ):
+    pd_score = lookup_score(
+        pd,
+        PD_SCORE
+    )
 
-            return {
-                "Loss Ratio": loss_ratio,
-                "Decision": rule["decision"],
-                "Monitoring": rule["monitoring"],
-                "Reason":rule["reason"]
-            }
+    borrower_score = (
+        risk_grade_score +
+        stage_score +
+        pd_score
+    )
+
+    # ======================================================
+    # LOAN STRUCTURE (30)
+    # ======================================================
+
+    collateral_score = lookup_high_score(
+        collateral_coverage,
+        COLLATERAL_SCORE
+    )
+
+    lgd_score = lookup_score(
+        lgd,
+        LGD_SCORE
+    )
+
+    loan_amount_score = lookup_score(
+        loan_amount,
+        LOAN_AMOUNT_SCORE
+    )
+
+    loan_structure_score = (
+        collateral_score +
+        lgd_score +
+        loan_amount_score
+    )
+
+    # ======================================================
+    # EXPECTED LOSS (30)
+    # ======================================================
+
+    ecl_score = lookup_score(
+        ecl,
+        ECL_SCORE
+    )
+
+    loss_ratio_score = lookup_score(
+        loss_ratio,
+        LOSS_RATIO_SCORE
+    )
+
+    expected_loss_score = (
+        ecl_score +
+        loss_ratio_score
+    )
+
+    # ======================================================
+    # FINAL SCORE
+    # ======================================================
+
+    final_score = (
+        borrower_score +
+        loan_structure_score +
+        expected_loss_score
+    )
 
     return {
-    "Loss Ratio": loss_ratio,
-    "Decision": "Manual Review Required",
-    "Monitoring": "Senior Credit Committee",
-    "Reason": "Application requires manual credit assessment."
-}
+
+        # Borrower Risk
+        "Risk Grade Score": risk_grade_score,
+        "Stage Score": stage_score,
+        "PD Score": pd_score,
+        "Borrower Risk Score": borrower_score,
+
+        # Loan Structure
+        "Collateral Score": collateral_score,
+        "LGD Score": lgd_score,
+        "Loan Amount Score": loan_amount_score,
+        "Loan Structure Score": loan_structure_score,
+
+        # Expected Loss
+        "ECL Score": ecl_score,
+        "Loss Ratio Score": loss_ratio_score,
+        "Expected Loss Score": expected_loss_score,
+
+        # Final
+        "Final Score": final_score
+
+    }
+
+# ==========================================================
+# GENERATE LENDING DECISION
+# ==========================================================
+
+def generate_decision(decision_score):
+    """
+    Generate the final lending decision based on the
+    Credit Decision Score.
+    """
+
+    if decision_score >= 85:
+
+        return {
+
+            "Decision": "Approve",
+
+            "Monitoring": "Standard Annual Review",
+
+            "Reason": (
+                "Excellent borrower profile with very low expected "
+                "credit risk."
+            )
+
+        }
+
+    elif decision_score >= 70:
+
+        return {
+
+            "Decision": "Approve with Monitoring",
+
+            "Monitoring": "Quarterly Credit Review",
+
+            "Reason": (
+                "Loan can be approved, but periodic monitoring is "
+                "recommended due to moderate credit risk."
+            )
+
+        }
+
+    elif decision_score >= 55:
+
+        return {
+
+            "Decision": "Additional Collateral Required",
+
+            "Monitoring": "Collateral Verification Required",
+
+            "Reason": (
+                "Current collateral protection is insufficient for the "
+                "identified credit risk. Additional security is recommended."
+            )
+
+        }
+
+    elif decision_score >= 40:
+
+        return {
+
+            "Decision": "Manual Credit Committee Review",
+
+            "Monitoring": "Senior Credit Officer Review",
+
+            "Reason": (
+                "Application requires manual assessment before a final "
+                "lending decision can be made."
+            )
+
+        }
+
+    else:
+
+        return {
+
+            "Decision": "Decline Application",
+
+            "Monitoring": "No Further Processing",
+
+            "Reason": (
+                "Overall credit risk exceeds the bank's acceptable "
+                "lending policy."
+            )
+
+        }
 
 # ==========================================================
 # RISK REPORT GENERATOR
@@ -332,24 +548,71 @@ def generate_risk_report(
     loan_amount,
     collateral_value
 ):
+
+    # ======================================================
+    # IFRS 9 CALCULATIONS
+    # ======================================================
+
     risk_level = RISK_LEVEL_MAPPING[risk_grade]
+
     pd = calculate_pd(risk_grade)
+
     lgd, coverage = calculate_lgd(
         loan_amount,
         collateral_value
     )
+
     ead = calculate_ead(loan_amount)
+
     ecl = calculate_ecl(
         pd,
         lgd,
         ead
     )
+
     stage = classify_stage(risk_grade)
-    decision = generate_decision(
-        stage,
-        ecl,
-        ead
+
+    loss_ratio = ecl / loan_amount if loan_amount > 0 else 0
+
+
+    # ======================================================
+    # CREDIT DECISION SCORE
+    # ======================================================
+
+    score = compute_credit_decision_score(
+
+        risk_grade=risk_grade,
+
+        stage=stage,
+
+        pd=pd,
+
+        loan_amount=loan_amount,
+
+        collateral_coverage=coverage,
+
+        lgd=lgd,
+
+        ecl=ecl,
+
+        loss_ratio=loss_ratio
+
     )
+
+
+    # ======================================================
+    # FINAL DECISION
+    # ======================================================
+
+    decision = generate_decision(
+        score["Final Score"]
+    )
+
+
+    # ======================================================
+    # RETURN REPORT
+    # ======================================================
+
     return {
 
         "Applicant ID": applicant_id,
@@ -362,7 +625,7 @@ def generate_risk_report(
 
         "LGD": lgd,
 
-        "Loan Amount":loan_amount,
+        "Loan Amount": loan_amount,
 
         "Collateral Value": collateral_value,
 
@@ -380,9 +643,36 @@ def generate_risk_report(
 
         "Reason": decision["Reason"],
 
-        "Loss Ratio": decision["Loss Ratio"]
+        "Loss Ratio": loss_ratio,
+
+        # ------------------------
+        # Credit Decision Score
+        # ------------------------
+
+        # Overall Score
+        "Decision Score": score["Final Score"],
+
+        # Section Scores
+        "Borrower Risk Score": score["Borrower Risk Score"],
+        "Loan Structure Score": score["Loan Structure Score"],
+        "Expected Loss Score": score["Expected Loss Score"],
+
+        # Detailed Scores
+        "Risk Grade Score": score["Risk Grade Score"],
+        "Stage Score": score["Stage Score"],
+        "PD Score": score["PD Score"],
+
+        "Collateral Score": score["Collateral Score"],
+        "LGD Score": score["LGD Score"],
+        "Loan Amount Score": score["Loan Amount Score"],
+
+        "ECL Score": score["ECL Score"],
+        "Loss Ratio Score": score["Loss Ratio Score"],
 
     }
+
+
+
 
 def format_risk_report(report: Dict) -> Dict:
     """
