@@ -745,7 +745,7 @@ def create_ifrs9_summary(report: dict):
             st.markdown("#### Risk Grade")
 
             st.write(
-                f"🟢 {report['Risk Grade']} ({report['Risk Level']})"
+               f" {risk_grade_status(report['Risk Grade'])}  ({report['Risk Level']})"
             )
 
             st.caption(
@@ -757,7 +757,7 @@ def create_ifrs9_summary(report: dict):
             st.markdown("#### IFRS Stage")
 
             st.write(
-                f"🟢 {report['IFRS Stage']}"
+                f"{ifrs_status(report['IFRS Stage'])}"
             )
 
             st.caption(
@@ -1022,6 +1022,34 @@ def collateral_status(score):
         return "🟠 Weak Security"
 
     return "🔴 Unsecured"
+
+
+def risk_grade_status(score):
+
+    if score == "P1":
+        return "🟢 P1"
+
+    elif score == "P2":
+        return "🟡 P2"
+
+    elif score == "P3":
+        return "🟠 P3"
+
+    elif score == "P4":
+        return "🔴 P4"
+
+
+def ifrs_status(score):
+
+    if score == "Stage 1":
+        return "🟢 Stage 1"
+
+    elif score == "Stage 2":
+        return "🟡 Stage 2 "
+
+    elif score == "Stage 3":
+        return "🔴 Stage 3"
+
 
 
 def lgd_status(score):

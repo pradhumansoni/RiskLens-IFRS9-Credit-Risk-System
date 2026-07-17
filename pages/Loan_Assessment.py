@@ -89,22 +89,22 @@ if search_clicked:
         customer_profile = search_customer_profile(applicant_id)
         customer_features = search_customer_features(applicant_id)
 
-    if customer_profile is None or customer_features is None :
-        st.error("Applicant ID not found.")
+        if customer_profile is None or customer_features is None :
+            st.error("Applicant ID not found.")
 
-    else:
+        else:
 
 
-        predicted_class = predict_risk(customer_features)
-        risk_grade = map_risk_grade(predicted_class)
+            predicted_class = predict_risk(customer_features)
+            risk_grade = map_risk_grade(predicted_class)
 
-        st.session_state.current_applicant = applicant_id
-        st.session_state.current_profile = customer_profile
-        st.session_state.current_features = customer_features
-        st.session_state.current_risk = risk_grade
+            st.session_state.current_applicant = applicant_id
+            st.session_state.current_profile = customer_profile
+            st.session_state.current_features = customer_features
+            st.session_state.current_risk = risk_grade
 
-        st.session_state.current_report = None
-        st.success("Customer profile loaded successfully.")
+            st.session_state.current_report = None
+            st.success("Customer profile loaded successfully.")
 
 
 # ==========================================================
@@ -412,14 +412,14 @@ if (
 
             score_text = (
                 f"The Overall Credit Score decreased by **{abs(score_diff):.0f} points**, "
-                "indicating a weaker credit profile."
+                "indicating a decrease in chance of getting a loan approval with new loan data"
             )
 
         elif score_diff > 0:
 
             score_text = (
                 f"The Overall Credit Score improved by **{score_diff:.0f} points**, "
-                "indicating a stronger credit profile."
+                "indicating an increase in chance of getting a loan approval with new loan data."
             )
 
         else:

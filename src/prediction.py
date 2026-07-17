@@ -2,6 +2,12 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
+from IFRS9_engine import (
+    generate_risk_report,
+    format_risk_report
+)
+
+
 # ============================================================
 # Project Paths
 # ============================================================
