@@ -125,4 +125,4 @@ def run_credit_assessment(
         collateral_value=loan_data["collateral"]
     )
 
-    return format_risk_report(report)
+    return report

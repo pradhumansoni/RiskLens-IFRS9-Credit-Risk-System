@@ -22,7 +22,6 @@ from src.config import (
     PD_MAPPING,
     LGD_RULES,
     STAGE_MAPPING,
-    DECISION_RULES,
     RISK_LEVEL_MAPPING
 )
 
@@ -34,8 +33,7 @@ from src.config import (
     LGD_SCORE,
     LOAN_AMOUNT_SCORE,
     ECL_SCORE,
-    LOSS_RATIO_SCORE,
-    DECISION_THRESHOLDS
+    LOSS_RATIO_SCORE
 )
 
 # ==========================================================
@@ -136,9 +134,6 @@ def lookup_score(value, rules):
 
     return 0
 
-# ==========================================================
-# GENERIC REVERSE LOOKUP
-# ==========================================================
 
 # ==========================================================
 # HIGHER IS BETTER SCORE LOOKUP

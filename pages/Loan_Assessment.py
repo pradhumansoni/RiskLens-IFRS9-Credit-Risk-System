@@ -17,7 +17,8 @@ from src.components import (
     create_loan_form,
     create_generate_button,
     create_risk_summary_card,
-    create_ifrs9_summary
+    create_ifrs9_summary,
+    assessment_card
 )
 
 from src.prediction import (
@@ -83,11 +84,12 @@ create_page_header(
 applicant_id, search_clicked = create_customer_search()
 
 if search_clicked: 
-    customer_profile = search_customer_profile(applicant_id)
-    customer_features = search_customer_features(applicant_id)
+    with st.spinner("🔍 Retrieving customer profile..."):
 
-    if customer_profile is None:
+        customer_profile = search_customer_profile(applicant_id)
+        customer_features = search_customer_features(applicant_id)
 
+    if customer_profile is None or customer_features is None :
         st.error("Applicant ID not found.")
 
     else:
@@ -102,6 +104,7 @@ if search_clicked:
         st.session_state.current_risk = risk_grade
 
         st.session_state.current_report = None
+        st.success("Customer profile loaded successfully.")
 
 
 # ==========================================================
@@ -150,9 +153,8 @@ if (
     # Freeze the original proposal
     st.session_state.original_loan = loan_data.copy()
 
-    report = format_risk_report(report)
-
-    st.session_state.current_report = report
+    st.session_state.current_report_raw = report
+    st.session_state.current_report = format_risk_report(report)
 
 
 if st.session_state.current_report is not None:
@@ -160,6 +162,14 @@ if st.session_state.current_report is not None:
     create_ifrs9_summary(
     st.session_state.current_report
 )
+    if not st.session_state.what_if_mode:
+
+        if st.button(
+            "🔄 What-If Analysis",
+            use_container_width=True
+        ):
+            st.session_state.what_if_mode = True
+            st.rerun()
     
 
 #================================================================================
@@ -183,29 +193,14 @@ if (
         st.markdown("### Current Proposal")
 
         st.metric(
-            "Loan Amount",
-            f"₹{loan['loan_amount']:,.0f}"
-        )
+        "Loan Amount",
+        f"₹{loan['loan_amount']:,.0f}"
+    )
 
         st.metric(
-            "Interest Rate",
-            f"{loan['interest_rate']:.2f}%"
-        )
-
-        st.metric(
-            "Loan Tenure",
-            f"{loan['tenure']} Years"
-        )
-
-        st.metric(
-            "Collateral",
+            "Collateral Value",
             f"₹{loan['collateral']:,.0f}"
-        )
-
-        st.metric(
-            "Loan Type",
-            loan["loan_type"]
-        )
+    )
 
     with right:
 
@@ -214,141 +209,267 @@ if (
         new_loan_amount = st.number_input(
             "Loan Amount (₹)",
             value=float(loan["loan_amount"]),
-            step=10000.0,
+            min_value=0.0,
+            step=50000.0,
             key="whatif_loan_amount"
         )
 
-        new_interest_rate = st.number_input(
-            "Interest Rate (%)",
-            value=float(loan["interest_rate"]),
-            step=0.25,
-            key="whatif_interest"
-        )
+        if new_loan_amount <= 0:
+            st.error("Loan amount must be greater than zero.")
+            st.stop()
 
-        new_tenure = st.number_input(
-            "Loan Tenure (Years)",
-            value=int(loan["tenure"]),
-            key="whatif_tenure"
-        )
 
         new_collateral = st.number_input(
             "Collateral Value (₹)",
             value=float(loan["collateral"]),
+            min_value=0.0,
             step=10000.0,
             key="whatif_collateral"
         )
 
-        loan_types = [
-    "Home Loan",
-    "Personal Loan",
-    "Vehicle Loan",
-    "Education Loan",
-    "Business Loan"
-]
 
-        new_loan_type = st.selectbox(
-            "Loan Type",
-            loan_types,
-            index=loan_types.index(loan["loan_type"]),
-            key="whatif_loan_type"
-        )
+    # Comaparison Button + Code    
 
-# Comaparison Button + Code    
+    st.divider()
 
-st.divider()
-
-compare = st.button(
-    "📊 Compare Scenarios",
-    type="primary",
-    use_container_width=True
-)
-
-if compare:
-
-    original_report = run_credit_assessment(
-        applicant_id=st.session_state.current_applicant,
-        risk_grade=st.session_state.current_risk,
-        loan_data=st.session_state.original_loan
+    compare = st.button(
+        "📊 Compare Scenarios",
+        type="primary",
+        use_container_width=True
     )
 
-    new_loan = {
-        "loan_amount": new_loan_amount,
-        "interest_rate": new_interest_rate,
-        "loan_type": new_loan_type,
-        "tenure": new_tenure,
-        "collateral": new_collateral
-    }
-
-    alternative_report = run_credit_assessment(
-        applicant_id=st.session_state.current_applicant,
-        risk_grade=st.session_state.current_risk,
-        loan_data=new_loan
-    )
-
-    st.success("Comparison executed successfully!")
-
-    comparison = {
-    "Metric": [
-        "Risk Grade",
-        "IFRS Stage",
-        "PD",
-        "LGD",
-        "ECL",
-        "Decision Score",
-        "Recommendation"
-    ],
-
-    "Current": [
-        original_report["Risk Grade"],
-        original_report["IFRS Stage"],
-        original_report["PD"],
-        original_report["LGD"],
-        original_report["ECL"],
-        original_report["Decision Score"],
-        original_report["Decision"]
-    ],
-
-    "Alternative": [
-        alternative_report["Risk Grade"],
-        alternative_report["IFRS Stage"],
-        alternative_report["PD"],
-        alternative_report["LGD"],
-        alternative_report["ECL"],
-        alternative_report["Decision Score"],
-        alternative_report["Decision"]
-    ]
-}
-
-    st.subheader("📊 Scenario Comparison")
-
-    st.dataframe(
-    comparison,
-    use_container_width=True,
-    hide_index=True
-    )
-
-    st.subheader("📌 Impact Summary")
-    if original_report["Decision"] != alternative_report["Decision"]:
-        st.warning(
-            f"Recommendation changed from "
-            f"**{original_report['Decision']}** "
-            f"to "
-            f"**{alternative_report['Decision']}**."
+    if compare:
+        
+        original_report = run_credit_assessment(
+            applicant_id=st.session_state.current_applicant,
+            risk_grade=st.session_state.current_risk,
+            loan_data=st.session_state.original_loan
         )
-    else:
-        st.success(
-            "The lending recommendation remains unchanged."
+        original_display = format_risk_report(original_report)
+
+        new_loan = {
+            "loan_amount": new_loan_amount,
+            "collateral": new_collateral
+        }
+
+        alternative_report = run_credit_assessment(
+            applicant_id=st.session_state.current_applicant,
+            risk_grade=st.session_state.current_risk,
+            loan_data=new_loan
+        )
+        alternative_display = format_risk_report(alternative_report)
+
+        # ==========================================
+        # Calculate comparison metrics
+        # ==========================================
+
+        score_diff = (
+            alternative_report["Decision Score"]
+            - original_report["Decision Score"]
         )
 
-    score_diff = (
-    alternative_report["Decision Score"]
-    - original_report["Decision Score"]
-)
+        ecl_diff = (
+            alternative_report["ECL"]
+            - original_report["ECL"]
+        )
 
-    if score_diff > 0:
-        st.success(f"Decision Score improved by {score_diff} points.")
-    elif score_diff < 0:
-        st.error(f"Decision Score decreased by {abs(score_diff)} points.")
-    else:
-        st.info("Decision Score remains unchanged.")
+        lgd_diff = (
+            alternative_report["LGD"]
+            - original_report["LGD"]
+        )
+
+        pd_diff = (
+            alternative_report["PD"]
+            - original_report["PD"]
+        )
+
+        coverage_original = (
+            st.session_state.original_loan["collateral"]
+            / st.session_state.original_loan["loan_amount"]
+        ) * 100
+
+        coverage_alternative = (
+            new_loan["collateral"]
+            / new_loan["loan_amount"]
+        ) * 100
+
+        coverage_diff = (
+            coverage_alternative
+            - coverage_original
+        )
+
+        st.success("Comparison executed successfully!")
+
+        st.subheader("📊 Scenario Comparison")
+
+        left, right = st.columns(2)
+
+        with left:
+
+            assessment_card(
+                title="Current Assessment",
+                proposal=st.session_state.original_loan,
+                report=original_report,
+                formatted=original_display
+            )
+
+        with right:
+
+            assessment_card(
+                title="Alternative Assessment",
+                proposal=new_loan,
+                report=alternative_report,
+                formatted=alternative_display,
+                score_delta=score_diff
+            )
+
+        # ==========================================================
+        # BUSINESS IMPACT SUMMARY
+        # ==========================================================
+
+        st.subheader("📌 Business Impact Summary")
+
+        loan_original = st.session_state.original_loan["loan_amount"]
+        loan_new = new_loan["loan_amount"]
+
+        coll_original = st.session_state.original_loan["collateral"]
+        coll_new = new_loan["collateral"]
+
+        coverage_original = (coll_original / loan_original) * 100
+        coverage_new = (coll_new / loan_new) * 100
+
+        score_diff = alternative_report["Decision Score"] - original_report["Decision Score"]
+
+        # ----------------------------------------------------------
+        # Build Dynamic Narrative
+        # ----------------------------------------------------------
+
+        intro = ""
+
+        if loan_new > loan_original and coll_new == coll_original:
+
+            intro = (
+                f"The requested loan amount increased from **₹{loan_original:,.0f}** "
+                f"to **₹{loan_new:,.0f}**, while the collateral value remained unchanged. "
+                "This increased the bank's credit exposure without improving the available security."
+            )
+
+        elif loan_new > loan_original and coll_new > coll_original:
+
+            intro = (
+                f"The requested loan amount increased from **₹{loan_original:,.0f}** "
+                f"to **₹{loan_new:,.0f}**. The borrower also increased the collateral "
+                f"from **₹{coll_original:,.0f}** to **₹{coll_new:,.0f}**, partially offsetting the additional exposure."
+            )
+
+        elif loan_new == loan_original and coll_new > coll_original:
+
+            intro = (
+                f"The requested loan amount remained unchanged while the collateral "
+                f"increased from **₹{coll_original:,.0f}** to **₹{coll_new:,.0f}**. "
+                "This strengthened the bank's security position."
+            )
+
+        elif loan_new == loan_original and coll_new < coll_original:
+
+            intro = (
+                f"The requested loan amount remained unchanged, but the collateral "
+                f"decreased from **₹{coll_original:,.0f}** to **₹{coll_new:,.0f}**, "
+                "reducing the security available against the loan."
+            )
+
+        elif loan_new < loan_original:
+
+            intro = (
+                f"The requested loan amount decreased from **₹{loan_original:,.0f}** "
+                f"to **₹{loan_new:,.0f}**, reducing the bank's overall credit exposure."
+            )
+
+        else:
+
+            intro = (
+                "The proposed loan structure remained materially unchanged."
+            )
+
+        # ----------------------------------------------------------
+        # Risk Impact
+        # ----------------------------------------------------------
+
+        risk = (
+            f"As a consequence, collateral coverage changed from "
+            f"**{coverage_original:.1f}%** to **{coverage_new:.1f}%**. "
+            f"This changed the **Loss Given Default (LGD)** from "
+            f"**{original_display['LGD']}** to **{alternative_display['LGD']}**, "
+            f"and the **Expected Credit Loss (ECL)** from "
+            f"**{original_display['ECL']}** to **{alternative_display['ECL']}**."
+        )
+
+        # ----------------------------------------------------------
+        # Credit Score
+        # ----------------------------------------------------------
+
+        if score_diff < 0:
+
+            score_text = (
+                f"The Overall Credit Score decreased by **{abs(score_diff):.0f} points**, "
+                "indicating a weaker credit profile."
+            )
+
+        elif score_diff > 0:
+
+            score_text = (
+                f"The Overall Credit Score improved by **{score_diff:.0f} points**, "
+                "indicating a stronger credit profile."
+            )
+
+        else:
+
+            score_text = (
+                "The Overall Credit Score remained unchanged."
+            )
+
+        # ----------------------------------------------------------
+        # Display Summary
+        # ----------------------------------------------------------
+
+        st.markdown("### Assessment Summary")
+
+        st.markdown(
+            intro +
+            "\n\n" +
+            risk +
+            "\n\n" +
+            score_text
+        )
+
+        # ----------------------------------------------------------
+        # Final Decision
+        # ----------------------------------------------------------
+
+        if original_display["Decision"] != alternative_display["Decision"]:
+
+            st.warning(
+                f"""
+        ### Final Credit Decision
+
+        **{original_display['Decision']}**
+        &nbsp;&nbsp;⬇️
+        **{alternative_display['Decision']}**
+
+        The change in loan structure materially affected the bank's risk profile,
+        resulting in an updated lending recommendation.
+        """
+            )
+
+        else:
+
+            st.success(
+                f"""
+        ### Final Credit Decision
+
+        **{alternative_display['Decision']}**
+
+        Although the proposal changed, the overall lending recommendation remains unchanged.
+        """
+            )
 

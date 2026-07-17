@@ -1,6 +1,6 @@
 import streamlit as st
-
-
+from src.utils import format_currency,format_months,format_number,format_percentage,format_text
+from src.config import RISK_LEVEL_MAPPING
 # ==========================================================
 # SECTION HEADER
 # ==========================================================
@@ -25,16 +25,20 @@ def create_page_header(title: str, subtitle: str):
 
 def create_welcome_banner():
 
-    st.info(
-        """
-### Welcome
+    with st.container(border=True):
 
-Welcome to the **Enterprise AI Credit Risk Management System**.
+        st.subheader("👋 Welcome")
 
-This application helps bank credit officers evaluate loan applications
-using Machine Learning and IFRS 9 Expected Credit Loss methodology.
-"""
-    )
+        st.write(
+            """
+            This enterprise decision support system assists credit officers in
+            evaluating loan applications using Machine Learning, IFRS 9
+            Expected Credit Loss methodology, and Explainable AI.
+
+            Use the navigation below to begin a new loan assessment,
+            review model performance, or learn more about the application.
+            """
+        )
 
 
 # ==========================================================
@@ -51,7 +55,7 @@ def create_metric_card(title: str, value: str, icon: str):
 
 <h1>{icon}</h1>
 
-<p style="font-size:15px;">
+<p style="font-size:23px;">
 {title}
 </p>
 
@@ -97,7 +101,7 @@ def create_system_overview():
     with col4:
         create_metric_card(
             "IFRS 9",
-            "Enabled",
+            "Score System",
             "🏦"
         )
 
@@ -107,26 +111,57 @@ def create_system_overview():
 # ==========================================================
 
 def create_quick_actions():
+    st.divider()
 
-    create_section_header("🚀 Quick Actions")
+    st.subheader("🚀 Quick Actions")
+    st.caption("Navigate to the major modules of the application.")
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
+        with st.container(border=True):
 
-        if st.button(
-            "📝 New Loan Assessment",
-            use_container_width=True
-        ):
-            st.switch_page("pages/Loan_Assessment.py")
+            st.markdown("### 📝 Loan Assessment")
+
+            st.write(
+                "Evaluate a loan application using Machine Learning and IFRS 9."
+            )
+
+            if st.button(
+                "Open Assessment",
+                use_container_width=True
+            ):
+                st.switch_page("pages/Loan_Assessment.py")
 
     with col2:
+        with st.container(border=True):
 
-        if st.button(
-            "📈 Portfolio Analytics",
-            use_container_width=True
-        ):
-            st.switch_page("pages/Portfolio_Analytics.py")
+            st.markdown("### 📈 Model Performance")
+
+            st.write(
+                "Review evaluation metrics, SHAP explainability and model insights."
+            )
+
+            if st.button(
+                "View Performance",
+                use_container_width=True
+            ):
+                st.switch_page("pages/Model_Performance.py")
+
+    with col3:
+        with st.container(border=True):
+
+            st.markdown("### ℹ️ About")
+
+            st.write(
+                "Explore the business problem, architecture and technology stack."
+            )
+
+            if st.button(
+                "Learn More",
+                use_container_width=True
+            ):
+                st.switch_page("pages/About.py")
 
 
 # ==========================================================
@@ -180,8 +215,8 @@ def create_business_workflow():
 # ==========================================================
 
 def create_project_highlights():
-
-    create_section_header("⭐ Project Highlights")
+    st.divider()
+    create_section_header("⭐ Key Features")
 
     col1, col2 = st.columns(2)
 
@@ -272,10 +307,10 @@ def create_customer_profile(customer):
 
             info_row("Applicant ID", customer["Applicant ID"])
             info_row("Gender", customer["Gender"])
-            info_row("Education", customer["Education"])
+            info_row("Education", format_text(customer["Education"]))
             info_row("Marital Status", customer["Marital Status"])
             info_row("Monthly Income", customer["Monthly Income (₹)"])
-            info_row("Employment Duration", customer["Employment Duration (Months)"])
+            info_row("Latest Employment Duration", customer["Employment Duration (Months)"])
 
         # -----------------------------
         # Credit Behaviour
@@ -285,23 +320,23 @@ def create_customer_profile(customer):
             st.markdown("### 📊 Credit Behaviour")
 
             info_row(
-                "Oldest Credit Line",
-                customer["Oldest Credit Line (Months)"]
+                "Oldest Credit Line Age",
+                format_months(customer["Oldest Credit Line (Months)"])
             )
 
             info_row(
-                "Newest Credit Line",
-                customer["Newest Credit Line (Months)"]
+                "Newest Credit Line Age",
+                format_months(customer["Newest Credit Line (Months)"])
             )
 
             info_row(
                 "Months Since Last Payment",
-                customer["Months Since Last Payment"]
+                format_months(customer["Months Since Last Payment"])
             )
 
             info_row(
                 "Months Since Last Credit Enquiry",
-                customer["Months Since Last Credit Enquiry"]
+                format_months(customer["Months Since Last Credit Enquiry"])
             )
 
         # -----------------------------
@@ -313,17 +348,17 @@ def create_customer_profile(customer):
 
             info_row(
                 "Credit Enquiries (Last 3 Months)",
-                customer["Credit Enquiries (Last 3 Months)"]
+                format_number(customer["Credit Enquiries (Last 3 Months)"])
             )
 
             info_row(
                 "Credit Card Enquiries (12 Months)",
-                customer["Credit Card Enquiries (12 Months)"]
+                format_number(customer["Credit Card Enquiries (12 Months)"])
             )
 
             info_row(
                 "Personal Loan Enquiries (12 Months)",
-                customer["Personal Loan Enquiries (12 Months)"]
+                format_number(customer["Personal Loan Enquiries (12 Months)"])
             )
 
     # =====================================================
@@ -451,7 +486,7 @@ def create_loan_form():
     Loan details entered by the credit officer.
     """
 
-    st.subheader("💰 Loan Details")
+    st.subheader("💰 Loan Proposal")
 
     col1, col2 = st.columns(2)
 
@@ -459,34 +494,11 @@ def create_loan_form():
         loan_amount = st.number_input(
             "Requested Loan Amount (₹)",
             min_value=0.0,
-            step=10000.0
-        )
-
-        interest_rate = st.number_input(
-            "Interest Rate (%)",
-            min_value=0.0,
-            max_value=30.0,
-            step=0.25
-        )
-
-        loan_type = st.selectbox(
-            "Loan Type",
-            [
-                "Home Loan",
-                "Personal Loan",
-                "Vehicle Loan",
-                "Education Loan",
-                "Business Loan"
-            ]
+            step=50000.0
         )
 
     with col2:
-        tenure = st.number_input(
-            "Loan Tenure (Years)",
-            min_value=1,
-            max_value=40,
-            value=10
-        )
+        
 
         collateral = st.number_input(
             "Collateral Value (₹)",
@@ -496,9 +508,6 @@ def create_loan_form():
 
     return {
         "loan_amount": loan_amount,
-        "interest_rate": interest_rate,
-        "loan_type": loan_type,
-        "tenure": tenure,
         "collateral": collateral
     }
 
@@ -528,7 +537,7 @@ def create_risk_summary_card(risk_grade):
 
     st.subheader("🤖 Current Credit Risk Assessment")
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
         st.metric(
@@ -538,14 +547,8 @@ def create_risk_summary_card(risk_grade):
 
     with col2:
         st.metric(
-            "Model",
-            "LightGBM"
-        )
-
-    with col3:
-        st.metric(
-            "Prediction",
-            "Success"
+            "Risk Level",
+            RISK_LEVEL_MAPPING[risk_grade]
         )
 
 # ==========================================================
@@ -737,51 +740,99 @@ def create_ifrs9_summary(report: dict):
         # BORROWER RISK
         # ======================================================
 
-        with st.expander("👤 Borrower Risk Breakdown"):
+        with st.expander("👤 Borrower Risk Assessment"):
+
+            st.markdown("#### Risk Grade")
 
             st.write(
-                f"• Risk Grade : **{report['Risk Grade Score']} / 20**"
+                f"🟢 {report['Risk Grade']} ({report['Risk Level']})"
             )
 
-            st.write(
-                f"• IFRS Stage : **{report['Stage Score']} / 10**"
+            st.caption(
+                f"Score: {report['Risk Grade Score']} / 20"
             )
 
+            st.divider()
+
+            st.markdown("#### IFRS Stage")
+
             st.write(
-                f"• PD : **{report['PD Score']} / 10**"
+                f"🟢 {report['IFRS Stage']}"
+            )
+
+            st.caption(
+                f"Score: {report['Stage Score']} / 10"
+            )
+
+            st.divider()
+
+            st.markdown("#### Probability of Default")
+
+            st.write(
+                report["PD"]
+            )
+
+            st.caption(
+                f"Score: {report['PD Score']} / 10"
             )
 
         # ======================================================
         # LOAN STRUCTURE
         # ======================================================
 
-        with st.expander("💰 Loan Structure Breakdown"):
+        with st.expander("💰 Loan Structure Assessment"):
 
-            st.write(
-                f"• Collateral : **{report['Collateral Score']} / 15**"
-            )
+            st.markdown("#### Collateral Coverage")
+            st.write(collateral_status(report["Collateral Score"]))
+            st.caption(f"Score: {report['Collateral Score']} / 15")
 
-            st.write(
-                f"• LGD : **{report['LGD Score']} / 10**"
-            )
+            st.divider()
 
-            st.write(
-                f"• Loan Amount : **{report['Loan Amount Score']} / 5**"
-            )
+            st.markdown("#### Loss Given Default")
+            st.write(lgd_status(report["LGD Score"]))
+            st.caption(f"Score: {report['LGD Score']} / 10")
+
+            st.divider()
+
+            st.markdown("#### Loan Exposure")
+            st.write(exposure_status(report["Loan Amount Score"]))
+            st.caption(f"Score: {report['Loan Amount Score']} / 5")
 
         # ======================================================
         # EXPECTED LOSS
         # ======================================================
 
-        with st.expander("📉 Expected Loss Breakdown"):
+        with st.expander("📉 Expected Loss Assessment"):
+
+            st.markdown("#### Expected Credit Loss")
 
             st.write(
-                f"• ECL : **{report['ECL Score']} / 20**"
+                ecl_status(
+                    report["ECL Score"]
+                )
             )
 
-            st.write(
-                f"• Loss Ratio : **{report['Loss Ratio Score']} / 10**"
+            st.caption(
+                f"Score: {report['ECL Score']} / 20"
             )
+
+            st.divider()
+
+            st.markdown("#### Loss Ratio")
+
+            st.write(
+                loss_ratio_status(
+                    report["Loss Ratio Score"]
+                )
+            )
+
+            st.caption(
+                f"Score: {report['Loss Ratio Score']} / 10"
+            )
+
+
+    
+
 
 # =====================================================
 # Section Header Function
@@ -823,3 +874,221 @@ def end_section():
         unsafe_allow_html=True
 
     )
+
+# =====================================================
+# Assessment Card For What if Analysis
+# =====================================================
+
+
+def assessment_card(
+    title: str,
+    proposal: dict,
+    report: dict,
+    formatted: dict,
+    score_delta: int | None = None,
+):
+    """
+    Render a professional credit assessment card.
+    """
+
+    with st.container(border=True):
+
+        st.markdown(f"## {title}")
+
+        # =====================================
+        # Loan Proposal
+        # =====================================
+
+        st.markdown("### 🏦 Loan Proposal")
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+            st.metric(
+                "Loan Amount",
+                f"₹{proposal['loan_amount']:,.0f}"
+            )
+
+        with c2:
+            st.metric(
+                "Collateral",
+                f"₹{proposal['collateral']:,.0f}"
+            )
+
+        coverage = (
+            proposal["collateral"]
+            / proposal["loan_amount"]
+        ) * 100
+
+        st.metric(
+            "Collateral Coverage",
+            f"{coverage:.1f}%"
+        )
+
+        st.divider()
+
+        # =====================================
+        # Risk Assessment
+        # =====================================
+
+        st.markdown("### 📊 Risk Assessment")
+
+        st.metric(
+            "Risk Grade",
+            formatted["Risk Grade"],
+            formatted["Risk Level"]
+        )
+
+        st.metric(
+            "IFRS Stage",
+            formatted["IFRS Stage"]
+        )
+
+        r1, r2 = st.columns(2)
+
+        with r1:
+
+            st.metric(
+                "Probability of Default",
+                formatted["PD"]
+            )
+
+        with r2:
+
+            st.metric(
+                "Loss Given Default",
+                formatted["LGD"]
+            )
+
+        st.divider()
+
+        # =====================================
+        # Lending Decision
+        # =====================================
+
+        st.markdown("### ✅ Lending Decision")
+
+        if score_delta is None:
+
+            st.metric(
+                "Overall Credit Score",
+                f"{report['Decision Score']:.0f}/100"
+            )
+
+        else:
+
+            st.metric(
+                "Overall Credit Score",
+                f"{report['Decision Score']:.0f}/100",
+                delta=f"{score_delta:+.0f}"
+            )
+
+        st.metric(
+            "Expected Credit Loss",
+            formatted["ECL"]
+        )
+
+        decision = formatted["Decision"]
+
+        if decision == "Approve":
+            st.success(decision)
+
+        elif decision == "Approve with Monitoring":
+            st.info(decision)
+
+        elif decision == "Additional Collateral Required":
+            st.warning(decision)
+
+        else:
+            st.error(decision)
+
+
+# ==========================================================
+# BUSINESS LABELS
+# ==========================================================
+
+def collateral_status(score):
+
+    if score >= 13:
+        return "🟢 Excellent Security"
+
+    elif score >= 10:
+        return "🟢 Good Security"
+
+    elif score >= 6:
+        return "🟡 Moderate Security"
+
+    elif score >= 2:
+        return "🟠 Weak Security"
+
+    return "🔴 Unsecured"
+
+
+def lgd_status(score):
+
+    if score >= 10:
+        return "🟢 Very Low Loss Severity"
+
+    elif score >= 8:
+        return "🟢 Low Loss Severity"
+
+    elif score >= 5:
+        return "🟡 Moderate Loss Severity"
+
+    elif score >= 2:
+        return "🟠 High Loss Severity"
+
+    return "🔴 Severe Loss Severity"
+
+
+def exposure_status(score):
+
+    if score >= 5:
+        return "🟢 Very Small Exposure"
+
+    elif score >= 4:
+        return "🟢 Small Exposure"
+
+    elif score >= 3:
+        return "🟡 Moderate Exposure"
+
+    elif score >= 2:
+        return "🟠 High Exposure"
+
+    return "🔴 Very High Exposure"
+
+
+def ecl_status(score):
+
+    if score >= 20:
+        return "🟢 Very Low Expected Loss"
+
+    elif score >= 16:
+        return "🟢 Low Expected Loss"
+
+    elif score >= 12:
+        return "🟡 Moderate Expected Loss"
+
+    elif score >= 8:
+        return "🟠 High Expected Loss"
+
+    return "🔴 Very High Expected Loss"
+
+
+def loss_ratio_status(score):
+
+    if score >= 10:
+        return "🟢 Minimal Portfolio Impact"
+
+    elif score >= 8:
+        return "🟢 Low Portfolio Impact"
+
+    elif score >= 6:
+        return "🟡 Moderate Portfolio Impact"
+
+    elif score >= 3:
+        return "🟠 High Portfolio Impact"
+
+    return "🔴 Severe Portfolio Impact"
+
+
