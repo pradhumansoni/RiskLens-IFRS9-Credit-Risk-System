@@ -117,9 +117,9 @@ Project overview, architecture, workflow, and implementation details.
 # 🚀 Installation
 
 ```bash
-git clone https://github.com/<your-username>/RiskLens.git
+git clone https://github.com/pradhumansoni/RiskLens-IFRS9-Credit-Risk-System.git
 
-cd RiskLens
+cd RiskLens-IFRS9-Credit-Risk-System
 
 pip install -r requirements.txt
 
