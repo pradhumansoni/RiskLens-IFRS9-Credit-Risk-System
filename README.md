@@ -116,6 +116,19 @@ Project overview, architecture, workflow, and implementation details.
 
 # 🚀 Installation
 
+## Prerequisites
+
+Before running the project, ensure you have the following installed:
+
+- Python 3.12 (or Python 3.11)
+- Git
+
+Verify your installation:
+
+```bash
+python --version
+pip --version
+
 ```bash
 git clone https://github.com/pradhumansoni/RiskLens-IFRS9-Credit-Risk-System.git
 
@@ -125,7 +138,16 @@ pip install -r requirements.txt
 
 streamlit run app.py
 ```
+Since my app depends on a trained model:
 
+```markdown
+## Repository Contents
+
+The repository includes:
+
+- Source code
+- Trained LightGBM model (`models/final_lgbm_model.pkl`)
+- Sample data required to run the application
 ---
 
 # 📂 Project Structure
