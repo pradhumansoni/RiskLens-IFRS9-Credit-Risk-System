@@ -247,7 +247,7 @@ def create_footer():
     st.divider()
 
     st.caption(
-        "RiskLens An enterprise AI Credit Risk Management System | Developed by Pradhuman Kumar Soni"
+        "RiskLens | IFRS 9 Credit Risk & ECL Platform | Developed by Pradhuman Kumar Soni"
     )
 
 # ==========================================================

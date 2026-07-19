@@ -22,7 +22,7 @@ import streamlit as st
 st.title("🏦 RiskLens")
 
 st.markdown(
-    "### IFRS 9 Compliant Credit Risk & Expected Credit Loss (ECL) Platform"
+    "### IFRS 9 Credit Risk & ECL Platform"
 )
 
 st.write(

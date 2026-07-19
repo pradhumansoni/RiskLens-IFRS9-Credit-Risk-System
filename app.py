@@ -17,7 +17,6 @@ about = st.Page("pages/About.py", title="ℹ️ About")
 
 with st.sidebar:
     st.title("🏦 RiskLens")
-    st.caption("IFRS 9 Decision Support System")
 st.sidebar.markdown("---")
 
 pg = st.navigation([dashboard, loan, model , about])

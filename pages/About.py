@@ -14,12 +14,6 @@ st.set_page_config(
 
 st.title("ℹ️ About Page")
 
-st.subheader(
-    "IFRS 9 Compliant Credit Risk Analysis & Decision Support System"
-)
-
-st.divider()
-
 
 # ==========================================================
 # HERO SECTION
@@ -29,8 +23,7 @@ st.markdown("---")
 
 st.markdown(
 """
-# 🏦 IFRS 9 Compliant Credit Risk Analysis &
-## Decision Support System
+# 🏦 IFRS 9 Credit Risk & ECL Platform
 
 ### Enterprise Banking Application
 
