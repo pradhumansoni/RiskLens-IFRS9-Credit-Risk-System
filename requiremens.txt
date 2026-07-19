@@ -1,0 +1,142 @@
+# 📦 Requirements
+
+This project was developed using **Python 3.12+** and the following libraries.
+
+---
+
+# Core Programming
+
+| Package | Purpose |
+|----------|---------|
+| Python | Programming Language |
+
+---
+
+# Machine Learning
+
+| Package | Purpose |
+|----------|---------|
+| scikit-learn | Data preprocessing, model evaluation, metrics |
+| lightgbm | Final credit risk classification model |
+
+---
+
+# Explainable Machine Learning
+
+| Package | Purpose |
+|----------|---------|
+| shap | Global and local model explainability |
+
+---
+
+# Data Processing
+
+| Package | Purpose |
+|----------|---------|
+| pandas | Data manipulation and analysis |
+| numpy | Numerical computations |
+
+---
+
+# Data Visualization
+
+| Package | Purpose |
+|----------|---------|
+| matplotlib | Static visualizations |
+| plotly | Interactive charts and dashboards |
+
+---
+
+# Streamlit Application
+
+| Package | Purpose |
+|----------|---------|
+| streamlit | Web application framework |
+
+---
+
+# Model Persistence
+
+| Package | Purpose |
+|----------|---------|
+| joblib | Saving and loading trained models |
+
+---
+
+# Notebook Environment
+
+| Package | Purpose |
+|----------|---------|
+| jupyter | Notebook environment for experimentation |
+| ipykernel | Jupyter kernel |
+
+---
+
+# Development Environment
+
+- Python 3.12+
+- VS Code
+- Git
+- GitHub
+
+---
+
+# Banking Methodology
+
+The application implements a simplified version of the following banking concepts:
+
+- IFRS 9 Expected Credit Loss (ECL)
+- Probability of Default (PD)
+- Loss Given Default (LGD)
+- Exposure at Default (EAD)
+- IFRS 9 Stage Classification
+- Internal Credit Risk Grading (P1–P4)
+- Credit Decision Score Framework
+
+---
+
+# Installation
+
+Install all required Python packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# requirements.txt
+
+```text
+streamlit
+pandas
+numpy
+matplotlib
+plotly
+scikit-learn
+lightgbm
+shap
+joblib
+jupyter
+ipykernel
+```
+
+---
+
+# Recommended Python Version
+
+```
+Python >= 3.12
+```
+
+---
+
+# Tested Environment
+
+| Component | Version |
+|-----------|----------|
+| Python | 3.12+ |
+| Streamlit | Latest Stable |
+| LightGBM | Latest Stable |
+| Scikit-learn | Latest Stable |
+| SHAP | Latest Stable |
