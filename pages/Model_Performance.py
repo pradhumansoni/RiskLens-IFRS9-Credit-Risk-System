@@ -1147,10 +1147,64 @@ with lightgbm_tab:
 
         st.subheader("📊 Model Summary")
 
-        st.metric("Selected Model", "LightGBM")
-        st.metric("Accuracy", "79.18%")
-        st.metric("Macro ROC-AUC", "93.38%")
-        st.metric("Features", "56")
+        c1, c2, c3 = st.columns(3)
+
+        with c1:
+            st.metric("Model", "LightGBM")
+
+        with c2:
+            st.metric("Accuracy", "79.18%")
+
+        with c3:
+            st.metric("Macro ROC-AUC", "93.38%")
+
+        c1, c2, c3 = st.columns(3)
+
+        with c1:
+            st.metric("Precision", "77.15%")
+
+        with c2:
+            st.metric("Recall", "79.18%")
+
+        with c3:
+            st.metric("F1 Score", "77.82%")
+
+        c1, c2, c3 = st.columns(3)
+
+        with c1:
+            st.metric("Features", "56")
+
+        with c2:
+            st.metric("Samples", "10,243")
+
+        with c3:
+            st.metric("Classes", "P1–P4")
+
+        st.divider()
+
+        left, right = st.columns(2)
+
+        with left:
+            st.markdown("#### ✅ Why LightGBM?")
+            st.markdown("""
+        - Highest validation performance
+        - Excellent multi-class ROC-AUC
+        - Fast inference for production
+        - Handles complex financial relationships
+        - SHAP-compatible for explainability
+        - Stable on tabular datasets
+        """)
+
+        with right:
+            st.markdown("#### 🏦 Business Advantages")
+            st.markdown("""
+        - IFRS 9 compliant risk assessment
+        - Explainable AI-driven predictions
+        - Consistent lending decisions
+        - Suitable for enterprise deployment
+        - Low-latency real-time scoring
+        - Scalable to large customer portfolios
+        """)
 
         st.divider()
 
@@ -1174,40 +1228,6 @@ with lightgbm_tab:
     """
         )
 
-    with st.container(border=True):
-
-        st.subheader("💡 Model Insights")
-
-        st.markdown("""
-    - LightGBM achieved the strongest overall performance among all evaluated baseline models.
-
-    - The model demonstrates excellent discrimination across the four internal risk grades.
-
-    - Behavioural credit variables such as recent enquiries and delinquency history are the most influential predictors.
-
-    - SHAP analysis confirms that predictions are driven by meaningful financial characteristics rather than arbitrary patterns.
-
-    - Both global and local explainability improve transparency, supporting model validation and regulatory confidence.
-    """)
-        
-
-    with st.container(border=True):
-
-        st.subheader("🏆 Selection Rationale")
-
-        st.success("""
-    LightGBM was selected as the final production model after comparing multiple baseline machine learning algorithms.
-
-    **Key reasons include:**
-
-    - Highest overall predictive performance.
-    - Excellent balance between precision and recall.
-    - Fast training and inference.
-    - Effective handling of nonlinear feature interactions.
-    - Native compatibility with SHAP explainability.
-    - Scalable architecture suitable for enterprise credit risk applications.
-    - Seamless integration with the IFRS 9 Expected Credit Loss framework.
-    """)
         
     with st.container(border=True):
 
