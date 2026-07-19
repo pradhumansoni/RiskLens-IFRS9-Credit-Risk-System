@@ -1,6 +1,6 @@
 # 🏦 RiskLens
 
-> AI-Powered IFRS 9 Credit Risk Assessment & Expected Credit Loss (ECL) Decision Support System
+> Machine Learning-Based IFRS 9 Credit Risk & Expected Credit Loss (ECL) Decision Support Platform
 
 ![Dashboard](screenshots/about_page.png)
 
@@ -8,23 +8,23 @@
 
 ## 📌 Overview
 
-RiskLens is an end-to-end AI-powered decision support system developed to assist credit officers in evaluating loan applications using IFRS 9 Expected Credit Loss (ECL) methodology.
+RiskLens is an end-to-end machine learning-based decision support platform developed to assist credit officers in evaluating loan applications using the IFRS 9 Expected Credit Loss (ECL) framework.
 
-The application combines machine learning, explainable AI, and banking business rules to generate transparent, data-driven lending recommendations.
+The application integrates predictive machine learning, explainable model interpretation, and banking business rules to deliver transparent, data-driven lending decisions.
 
 ---
 
 ## ✨ Features
 
-- 🤖 AI-powered borrower risk prediction (LightGBM)
-- 📊 IFRS 9 Expected Credit Loss (ECL) estimation
-- 📈 PD, LGD & EAD calculations
-- 🏦 IFRS Stage Classification
-- 📋 Credit Decision Support
+- 🤖 Machine Learning-based Borrower Risk Prediction (LightGBM)
+- 📊 IFRS 9 Expected Credit Loss (ECL) Estimation
+- 📈 Probability of Default (PD), Loss Given Default (LGD) & Exposure at Default (EAD)
+- 🏦 IFRS 9 Stage Classification
+- 📋 Credit Decision Support Engine
 - 🔄 Interactive What-If Analysis
-- 🧠 SHAP Explainability
+- 🧠 SHAP-Based Model Explainability
 - 📉 Comprehensive Model Validation Dashboard
-- 🎯 Professional Streamlit Interface
+- 🎯 Professional Streamlit Banking Interface
 
 ---
 
@@ -32,9 +32,9 @@ The application combines machine learning, explainable AI, and banking business 
 
 | Category | Technologies |
 |-----------|--------------|
-| Language | Python |
+| Programming Language | Python |
 | Machine Learning | LightGBM, Scikit-learn |
-| Explainable AI | SHAP |
+| Explainability | SHAP |
 | Data Processing | Pandas, NumPy |
 | Visualization | Matplotlib, Plotly |
 | Frontend | Streamlit |
@@ -45,7 +45,7 @@ The application combines machine learning, explainable AI, and banking business 
 
 ## Dashboard
 
-The landing page provides a high-level overview of the system and quick navigation to the major modules.
+The landing page provides a high-level overview of the platform and quick access to its major modules.
 
 ![Dashboard](screenshots/dashboard.png)
 
@@ -53,7 +53,7 @@ The landing page provides a high-level overview of the system and quick navigati
 
 ## Loan Assessment & Decision Support
 
-Evaluate borrower profiles, estimate IFRS 9 metrics, generate lending decisions, and compare alternative loan scenarios using What-If Analysis.
+Retrieve customer information, evaluate borrower risk, calculate IFRS 9 metrics, generate lending recommendations, and perform scenario-based What-If Analysis.
 
 ![Loan Assessment](screenshots/full_loan_assessment.png)
 
@@ -61,7 +61,7 @@ Evaluate borrower profiles, estimate IFRS 9 metrics, generate lending decisions,
 
 ## Model Development & Performance
 
-Comprehensive overview of the deployed LightGBM model, validation metrics, and model selection process.
+Review the deployed LightGBM model, validation metrics, model comparison, and deployment rationale.
 
 ![Model Overview](screenshots/model_overview.png)
 
@@ -69,7 +69,7 @@ Comprehensive overview of the deployed LightGBM model, validation metrics, and m
 
 ## Confusion Matrix Analysis
 
-Detailed evaluation of classification performance across all internal credit risk grades.
+Analyze classification accuracy and misclassification patterns across all internal credit risk grades.
 
 ![Confusion Matrix](screenshots/validation_confusion.png)
 
@@ -77,7 +77,7 @@ Detailed evaluation of classification performance across all internal credit ris
 
 ## Global Explainability
 
-Understand which borrower characteristics contribute most to model predictions using SHAP feature importance.
+Identify the most influential borrower characteristics using SHAP global feature importance.
 
 ![Global SHAP](screenshots/SHAP_global.png)
 
@@ -85,7 +85,7 @@ Understand which borrower characteristics contribute most to model predictions u
 
 ## Individual Prediction Explainability
 
-Explain individual borrower predictions using SHAP waterfall analysis for transparent decision support.
+Interpret individual borrower predictions using SHAP waterfall explanations for transparent credit risk assessment.
 
 ![Local SHAP](screenshots/SHAP_local.png)
 
@@ -93,7 +93,7 @@ Explain individual borrower predictions using SHAP waterfall analysis for transp
 
 ## About the Application
 
-Project overview, architecture, workflow, and technology stack.
+Explore the project architecture, technology stack, workflow, and implementation overview.
 
 ![About](screenshots/about_page.png)
 
@@ -134,17 +134,17 @@ RiskLens/
 ## 🎯 Project Highlights
 
 - End-to-end Machine Learning workflow
-- Explainable AI using SHAP
-- IFRS 9 compliant Expected Credit Loss framework
-- Interactive banking decision support system
-- Professional Streamlit application
-- Production-inspired modular architecture
+- Explainable Credit Risk Modelling using SHAP
+- IFRS 9 Expected Credit Loss (ECL) Framework
+- Interactive Banking Decision Support Platform
+- Modular Streamlit Application
+- Production-inspired Software Architecture
 
 ---
 
 ## 📜 Disclaimer
 
-This project was developed for educational and portfolio purposes. The IFRS 9 implementation is a simplified demonstration intended to showcase machine learning, explainable AI, and decision support concepts rather than serve as a production-ready banking solution.
+This project was developed for educational and portfolio purposes. The IFRS 9 implementation is a simplified demonstration intended to showcase machine learning, explainability, and decision support concepts rather than serve as a production-ready banking solution.
 
 ---
 
@@ -152,6 +152,6 @@ This project was developed for educational and portfolio purposes. The IFRS 9 im
 
 **Pradhuman Kumar Soni**
 
-M.Sc. Mathematics & Scientific Computing
+*M.Sc. Mathematics & Scientific Computing*
 
-AI • Machine Learning • Credit Risk Analytics • Data Science
+Machine Learning • Credit Risk Analytics • Financial Modelling • Data Science
