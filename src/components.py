@@ -115,6 +115,7 @@ def create_quick_actions():
 
     st.subheader("🚀 Quick Actions")
     st.caption("Navigate to the major modules of the application.")
+    st.divider()
 
     col1, col2, col3 = st.columns(3)
 

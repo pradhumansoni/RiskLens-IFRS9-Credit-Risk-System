@@ -37,6 +37,24 @@ MODEL_PATH = "models/final_lgbm_model.pkl"
 
 DATA_PATH = "data/processed/encoded_dataset.csv"
 
+MODEL_METADATA = {
+    "MODEL_NAME" : "Credit Risk Grade Classifier",
+    "ALGORITHM" : "LightGBM Classifier",
+    "FEATURES" : "56",
+    "TRAIN_SIZE" : "40968",
+    "TEST_SIZE" : "10243",
+    "MODEL_VERSION" : "v1.0",
+    "TRAINING_DATE" : "July 2026"
+}
+
+MODEL_METRICS = {
+    "Accuracy": "79.52%",
+    "Precision": "77.50%",
+    "Recall": "79.52%",
+    "F1 Score": "78.14%",
+    "ROC-AUC": "93.38%"
+}
+
 # ==========================================================
 # Customer Profile Columns
 # ==========================================================
