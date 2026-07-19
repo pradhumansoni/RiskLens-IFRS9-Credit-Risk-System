@@ -9,7 +9,8 @@ IFRS9_Project_Bible_v3.docx
 
 #models
 
-models/
+models/*
+!models/final_lgbm_model.pkl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
