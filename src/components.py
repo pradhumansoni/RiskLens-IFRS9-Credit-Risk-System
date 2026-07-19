@@ -29,7 +29,7 @@ def create_welcome_banner():
 
         st.subheader("👋 Welcome")
 
-        st.write(
+        st.info(
             """
             This enterprise decision support system assists credit officers in
             evaluating loan applications using Machine Learning, IFRS 9
@@ -247,7 +247,7 @@ def create_footer():
     st.divider()
 
     st.caption(
-        "Developed by Pradhuman Kumar Soni | Enterprise AI Credit Risk Management System"
+        "RiskLens An enterprise AI Credit Risk Management System | Developed by Pradhuman Kumar Soni"
     )
 
 # ==========================================================
@@ -264,11 +264,13 @@ def create_customer_search():
         applicant_id (str), search_clicked (bool)
     """
 
-    st.subheader("🔍 Customer Search")
+    st.subheader("🔍 Applicant Data Search")
 
     applicant_id = st.text_input(
     "Applicant ID",
-    key="search_applicant"
+    key="search_applicant",
+    placeholder="e.g., APP1234 for ApplicantID = 1234",
+    help = "Enter a Unique Applicant ID"
 )
 
     search_clicked = st.button(
@@ -289,7 +291,7 @@ import streamlit as st
 def create_customer_profile(customer):
 
     st.divider()
-    st.subheader("👤 Customer Profile")
+    st.subheader("👤 Applicant Profile")
 
     left, right = st.columns(2)
 
@@ -494,7 +496,7 @@ def create_loan_form():
     with col1:
         loan_amount = st.number_input(
             "Requested Loan Amount (₹)",
-            min_value=0.0,
+            min_value=50000.0,
             step=50000.0
         )
 
@@ -506,7 +508,6 @@ def create_loan_form():
             min_value=0.0,
             step=10000.0
         )
-
     return {
         "loan_amount": loan_amount,
         "collateral": collateral

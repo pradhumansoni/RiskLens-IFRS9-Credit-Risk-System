@@ -18,7 +18,8 @@ from src.components import (
     create_generate_button,
     create_risk_summary_card,
     create_ifrs9_summary,
-    assessment_card
+    assessment_card,
+    create_footer
 )
 
 from src.prediction import (
@@ -453,7 +454,7 @@ if (
         ### Final Credit Decision
 
         **{original_display['Decision']}**
-        &nbsp;&nbsp;⬇️
+        &nbsp;&nbsp;➜ 
         **{alternative_display['Decision']}**
 
         The change in loan structure materially affected the bank's risk profile,
@@ -473,3 +474,5 @@ if (
         """
             )
 
+
+create_footer()

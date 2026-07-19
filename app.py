@@ -4,9 +4,10 @@ from src.utils import load_css
 load_css()
 
 st.set_page_config(
-    page_title="AI Credit Risk System",
+    page_title="RiskLens",
     page_icon="🏦",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 dashboard = st.Page("pages/Dashboard.py", title="🏠 Dashboard")
@@ -14,7 +15,9 @@ loan = st.Page("pages/Loan_Assessment.py", title="📝 Loan Assessment")
 model = st.Page("pages/Model_Performance.py", title="Ⓜ️ Model Performance")
 about = st.Page("pages/About.py", title="ℹ️ About")
 
-st.sidebar.title("🏦 AI Credit Risk System")
+with st.sidebar:
+    st.title("🏦 RiskLens")
+    st.caption("IFRS 9 Decision Support System")
 st.sidebar.markdown("---")
 
 pg = st.navigation([dashboard, loan, model , about])

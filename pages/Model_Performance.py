@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from src.config import MODEL_DIR,MODEL_METADATA,MODEL_METRICS
+from src.components import create_footer
 
 #================================================================================
 # Three Main Tabs For Model Validation Reporting
@@ -1215,3 +1216,5 @@ with lightgbm_tab:
         st.success("""
     Based on the evaluation of predictive performance, explainability, computational efficiency, and business applicability, LightGBM was selected as the final production model. Its strong classification capability, transparent decision-making through SHAP, and suitability for IFRS 9 credit risk modelling make it an effective decision-support model for internal banking applications.
     """)
+        
+create_footer()

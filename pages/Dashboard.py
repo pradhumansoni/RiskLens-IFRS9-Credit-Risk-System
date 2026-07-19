@@ -13,10 +13,27 @@ from src.components import (
 
 load_css()
 
-create_page_header(
-    "🏦 IFRS 9 Compliant Risk Management And  Support Platform",
-    ""
+import streamlit as st
+
+# ==========================================================
+# Application Branding
+# ==========================================================
+
+st.title("🏦 RiskLens")
+
+st.markdown(
+    "### IFRS 9 Compliant Credit Risk & Expected Credit Loss (ECL) Platform"
 )
+
+st.write(
+    """
+An AI-powered decision support system that assists credit officers in borrower
+risk assessment, IFRS 9 Expected Credit Loss (ECL) estimation, and transparent
+lending decisions through explainable machine learning.
+"""
+)
+
+st.divider()
 
 create_welcome_banner()
 

@@ -1,5 +1,5 @@
 import streamlit as st
-
+from src.components import create_footer
 # ==========================================================
 # Page Creation
 # ==========================================================
@@ -281,8 +281,5 @@ specific calibration.
 
 st.divider()
 
-st.caption(
-    "IFRS 9 Compliant Credit Risk Analysis & Decision Support System | Version 1.0"
-)
+create_footer()
 
-st.caption("Developed by Pradhuman Kumar Soni")
