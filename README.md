@@ -1,42 +1,57 @@
 # 🏦 RiskLens
 
-> Machine Learning-Based IFRS 9 Credit Risk & Expected Credit Loss (ECL) Decision Support Platform
+> **An Explainable Machine Learning Platform for IFRS 9 Credit Risk Assessment & Expected Credit Loss (ECL) Estimation**
+
+[![Python](https://img.shields.io/badge/Python-3.12-blue)]()
+[![LightGBM](https://img.shields.io/badge/Model-LightGBM-green)]()
+[![Streamlit](https://img.shields.io/badge/Deployment-Streamlit-red)]()
+[![License](https://img.shields.io/badge/License-MIT-lightgrey)]()
+
+## 🚀 Live Demo
+
+### 🌐 Try the Application
+
+**https://risklens-ifrs9-credit-risk-system.streamlit.app/**
+
+> **Note:** The application may take 10–20 seconds to wake up if it has been idle on Streamlit Community Cloud.
+
+---
 
 ![Dashboard](screenshots/about_page.png)
 
 ---
 
-## 📌 Overview
+# 📌 Overview
 
-RiskLens is an end-to-end machine learning-based decision support platform developed to assist credit officers in evaluating loan applications using the IFRS 9 Expected Credit Loss (ECL) framework.
+RiskLens is an end-to-end **Machine Learning-powered Credit Risk Decision Support System** that assists credit officers in evaluating loan applications under the **IFRS 9 Expected Credit Loss (ECL)** framework.
 
-The application integrates predictive machine learning, explainable model interpretation, and banking business rules to deliver transparent, data-driven lending decisions.
+The platform combines predictive machine learning, explainable AI (SHAP), and banking business rules to generate transparent, data-driven lending recommendations through an interactive Streamlit application.
 
 ---
 
-## ✨ Features
+# ✨ Key Features
 
-- 🤖 Machine Learning-based Borrower Risk Prediction (LightGBM)
+- 🤖 LightGBM-based Borrower Risk Prediction
 - 📊 IFRS 9 Expected Credit Loss (ECL) Estimation
 - 📈 Probability of Default (PD), Loss Given Default (LGD) & Exposure at Default (EAD)
 - 🏦 IFRS 9 Stage Classification
 - 📋 Credit Decision Support Engine
 - 🔄 Interactive What-If Analysis
-- 🧠 SHAP-Based Model Explainability
-- 📉 Comprehensive Model Validation Dashboard
-- 🎯 Professional Streamlit Banking Interface
+- 🧠 SHAP Global & Local Explainability
+- 📉 Model Performance Dashboard
+- 💻 Professional Banking Interface built with Streamlit
 
 ---
 
-## 🛠 Tech Stack
+# 🛠 Tech Stack
 
 | Category | Technologies |
 |-----------|--------------|
 | Programming Language | Python |
 | Machine Learning | LightGBM, Scikit-learn |
-| Explainability | SHAP |
+| Explainable AI | SHAP |
 | Data Processing | Pandas, NumPy |
-| Visualization | Matplotlib, Plotly |
+| Visualization | Plotly, Matplotlib |
 | Frontend | Streamlit |
 
 ---
@@ -45,31 +60,31 @@ The application integrates predictive machine learning, explainable model interp
 
 ## Dashboard
 
-The landing page provides a high-level overview of the platform and quick access to its major modules.
+A centralized overview of the platform with quick navigation to all major modules.
 
 ![Dashboard](screenshots/dashboard.png)
 
 ---
 
-## Loan Assessment & Decision Support
+## Loan Assessment
 
-Retrieve customer information, evaluate borrower risk, calculate IFRS 9 metrics, generate lending recommendations, and perform scenario-based What-If Analysis.
+Search customer profiles, predict borrower risk, estimate IFRS 9 metrics, generate lending recommendations, and perform What-If Analysis.
 
 ![Loan Assessment](screenshots/full_loan_assessment.png)
 
 ---
 
-## Model Development & Performance
+## Model Performance
 
-Review the deployed LightGBM model, validation metrics, model comparison, and deployment rationale.
+View model comparison, validation metrics, deployment details, and overall model performance.
 
 ![Model Overview](screenshots/model_overview.png)
 
 ---
 
-## Confusion Matrix Analysis
+## Confusion Matrix
 
-Analyze classification accuracy and misclassification patterns across all internal credit risk grades.
+Evaluate classification accuracy across all internal credit risk grades.
 
 ![Confusion Matrix](screenshots/validation_confusion.png)
 
@@ -77,32 +92,32 @@ Analyze classification accuracy and misclassification patterns across all intern
 
 ## Global Explainability
 
-Identify the most influential borrower characteristics using SHAP global feature importance.
+Understand the most influential borrower features using SHAP Feature Importance.
 
 ![Global SHAP](screenshots/SHAP_global.png)
 
 ---
 
-## Individual Prediction Explainability
+## Local Explainability
 
-Interpret individual borrower predictions using SHAP waterfall explanations for transparent credit risk assessment.
+Interpret individual credit decisions with SHAP Waterfall plots.
 
 ![Local SHAP](screenshots/SHAP_local.png)
 
 ---
 
-## About the Application
+## About
 
-Explore the project architecture, technology stack, workflow, and implementation overview.
+Project overview, architecture, workflow, and implementation details.
 
 ![About](screenshots/about_page.png)
 
 ---
 
-## 🚀 Installation
+# 🚀 Installation
 
 ```bash
-git clone https://github.com/yourusername/RiskLens.git
+git clone https://github.com/<your-username>/RiskLens.git
 
 cd RiskLens
 
@@ -113,7 +128,7 @@ streamlit run app.py
 
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
 
 ```text
 RiskLens/
@@ -123,7 +138,6 @@ RiskLens/
 ├── src/
 ├── models/
 ├── data/
-├── notebooks/
 ├── assets/
 ├── requirements.txt
 └── README.md
@@ -131,27 +145,33 @@ RiskLens/
 
 ---
 
-## 🎯 Project Highlights
+# 🎯 Learning Outcomes
 
-- End-to-end Machine Learning workflow
-- Explainable Credit Risk Modelling using SHAP
-- IFRS 9 Expected Credit Loss (ECL) Framework
-- Interactive Banking Decision Support Platform
-- Modular Streamlit Application
-- Production-inspired Software Architecture
+This project demonstrates:
 
----
-
-## 📜 Disclaimer
-
-This project was developed for educational and portfolio purposes. The IFRS 9 implementation is a simplified demonstration intended to showcase machine learning, explainability, and decision support concepts rather than serve as a production-ready banking solution.
+- End-to-End Machine Learning Pipeline
+- Explainable AI using SHAP
+- IFRS 9 Expected Credit Loss Framework
+- Credit Risk Classification
+- Decision Support System Design
+- Streamlit Application Development
+- Production-style Project Organization
 
 ---
 
-## 👨‍💻 Author
+# 📜 Disclaimer
 
-**Pradhuman Kumar Soni**
+This project was developed for educational and portfolio purposes. The IFRS 9 implementation is a simplified demonstration of credit risk modelling and Expected Credit Loss estimation. It is **not intended for production banking environments** or regulatory compliance.
 
-*M.Sc. Mathematics & Scientific Computing*
+---
 
-Machine Learning • Credit Risk Analytics • Financial Modelling • Data Science
+# 👨‍💻 Author
+
+## Pradhuman Kumar Soni
+
+**M.Sc. Mathematics & Scientific Computing**
+
+Aspiring AI Engineer • Machine Learning • Credit Risk Analytics • Financial Modelling • Data Science
+
+---
+⭐ If you found this project interesting, consider giving it a star!
