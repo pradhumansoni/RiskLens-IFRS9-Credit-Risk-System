@@ -2,7 +2,7 @@
 
 > AI-Powered IFRS 9 Credit Risk Assessment & Expected Credit Loss (ECL) Decision Support System
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/about_page.png)
 
 ---
 
